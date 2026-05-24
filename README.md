@@ -189,7 +189,7 @@ npm run dev
 
 ### 6. Acessar a aplicação
 
-Abra seu navegador em: **http://localhost:3000**
+Abra seu navegador em: https://nexus-data-agent.vercel.app
 
 ---
 
