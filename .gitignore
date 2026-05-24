@@ -1,0 +1,112 @@
+# =============================================================
+#  NEXUS DATA AGENT — .gitignore
+#  Gerado em: 2026-05-24
+# =============================================================
+
+# ─── Dependências de Node / Frontend ─────────────────────────
+node_modules/
+.next/
+out/
+build/
+.vercel
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Compilação e Ambientes Python ───────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+
+# ─── Logs e Debug ────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# =============================================================
+# ⚠️  SEGURANÇA — Variáveis de Ambiente e Credenciais
+# =============================================================
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.secret
+
+# Caminhos específicos do projeto
+backend/.env
+frontend/.env.local
+
+# =============================================================
+# ⚠️  SEGURANÇA — Scripts de desenvolvimento com credenciais
+# =============================================================
+# Scripts PowerShell de automação (contêm lógica de extração de chaves)
+get_foundry_keys.ps1
+get_foundry_keys2.ps1
+click_and_copy.ps1
+debug_clicks.ps1
+screenshot.ps1
+list_windows.ps1
+*.ps1
+
+# Scripts de teste com credenciais hardcoded na raiz
+test_client.py
+test_rest.py
+test_versions.py
+test_api2.py
+
+# =============================================================
+# ⚠️  SEGURANÇA — Imagens e screenshots de debug
+# =============================================================
+screenshot.png
+screenshot_debug.png
+screenshot_gpt41.png
+ss_before_copy.png
+ss_after_copy.png
+*.png
+# Exceção: imagens de documentação no README
+!docs/images/
+
+# =============================================================
+# ⚠️  ARQUIVOS INTERNOS DE AGENTE/IDE
+# =============================================================
+frontend/AGENTS.md
+frontend/CLAUDE.md
+AGENTS.md
+CLAUDE.md
+.gemini/
+
+# ─── Docker e Infraestrutura ─────────────────────────────────
+docker-compose.override.yml
+.DS_Store
+*.tsbuildinfo
+Thumbs.db
+
+# ─── IDEs e Editores ─────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
