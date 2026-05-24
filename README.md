@@ -26,6 +26,12 @@ O **Nexus Data Agent** é uma plataforma de inteligência artificial conversacio
 
 O **Nexus** foi projetado para ser o copiloto de dados da sua organização — capaz de interpretar informações complexas, sugerir estratégias baseadas em dados e automatizar análises em linguagem natural.
 
+### 🌐 Ambiente ao Vivo (Produção)
+Você pode testar a aplicação rodando agora mesmo na nuvem:
+👉 **[Acessar o Nexus Data Agent (Live Demo)](https://nexus-data-agent.vercel.app)**
+
+*(O backend está hospedado com segurança no Render e o frontend na Vercel).*
+
 ---
 
 ## ✨ Funcionalidades
