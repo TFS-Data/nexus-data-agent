@@ -26,35 +26,43 @@ export default function Home() {
       <div className="blob-right opacity-30 pointer-events-none" />
 
       {/* ── Top bar ── */}
-      <header className="h-16 border-b border-white/[0.06] flex items-center justify-between px-8 lg:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2.5 text-white/50 hover:text-white transition-colors text-sm group cursor-pointer">
-            <span className="font-medium tracking-wide">Antigravity + Microsoft Foundry</span>
+      <header className="h-14 sm:h-16 border-b border-white/[0.06] flex items-center justify-between px-4 sm:px-8 lg:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          <div className="flex items-center gap-2 text-white/50 text-xs sm:text-sm truncate">
+            <span className="font-medium tracking-wide hidden xs:block sm:block">Antigravity + Microsoft Foundry</span>
+            <span className="font-medium tracking-wide block sm:hidden">Antigravity</span>
           </div>
-          <div className="h-4 w-[1px] bg-white/10" />
-          <span className="text-white/40 text-sm font-medium">Nexus</span>
+          <div className="h-4 w-[1px] bg-white/10 flex-shrink-0" />
+          <span className="text-white/40 text-xs sm:text-sm font-medium flex-shrink-0">Nexus</span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-2 text-sm text-emerald-400/80 font-medium bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20 mr-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Online
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <span className="flex items-center gap-1.5 text-xs text-emerald-400/80 font-medium bg-emerald-400/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-emerald-400/20">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+            <span className="hidden sm:inline">Online</span>
           </span>
           {messages.length > 0 && (
             <>
-              <button 
+              <button
                 onClick={() => window.print()}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 text-white text-xs font-medium rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 text-white text-xs font-medium rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
                 title="Salvar conversa como PDF"
               >
                 <Download size={14} />
                 Exportar PDF
               </button>
-              <button 
-                onClick={clearChat}
-                className="px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-colors"
+              <button
+                onClick={() => window.print()}
+                className="flex sm:hidden items-center p-1.5 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                title="Salvar conversa como PDF"
               >
-                Limpar Chat
+                <Download size={14} />
+              </button>
+              <button
+                onClick={clearChat}
+                className="px-2.5 sm:px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-colors"
+              >
+                Limpar
               </button>
             </>
           )}
@@ -71,41 +79,48 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="flex-1 flex flex-col items-center justify-center px-4 overflow-y-auto"
+              className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 overflow-y-auto py-8"
             >
               <motion.h1
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.08] tracking-tight text-white max-w-4xl mb-5 text-center"
+                className="text-[clamp(2rem,7vw,4.5rem)] font-semibold leading-[1.08] tracking-tight text-white max-w-4xl mb-4 sm:mb-5 text-center"
               >
-                Converse com agentes de<br />IA especializados em dados
+                Converse com agentes de<br className="hidden sm:block" />{" "}
+                IA especializados em dados
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-                className="text-white/50 text-lg font-normal max-w-xl mb-12 leading-relaxed text-center"
+                className="text-white/50 text-base sm:text-lg font-normal max-w-xl mb-8 sm:mb-12 leading-relaxed text-center px-2"
               >
                 Uma experiência moderna para análise de dados, automação e machine learning com Azure AI Foundry.
               </motion.p>
 
-              <div className="w-full max-w-4xl">
-                <ChatInput onSend={sendMessage} onStop={stop} isLoading={isLoading} />
-                
-                <div className="mt-6 flex flex-wrap gap-2.5 justify-center">
+              {/* ── Input box — maior e responsivo ── */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full max-w-[95vw] sm:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
+              >
+                <ChatInput onSend={sendMessage} onStop={stop} isLoading={isLoading} large />
+
+                <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-2.5 justify-center">
                   {EXAMPLE_PROMPTS.map((p) => (
                     <button
                       key={p}
                       onClick={() => sendMessage(p)}
-                      className="px-3.5 py-2 rounded-full text-[13px] text-white/40 border border-white/5 hover:border-white/20 hover:text-white/60 hover:bg-white/[0.02] transition-all"
+                      className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-[12px] sm:text-[13px] text-white/40 border border-white/5 hover:border-white/20 hover:text-white/60 hover:bg-white/[0.02] transition-all"
                     >
                       {p}
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ) : (
             <motion.div
@@ -118,12 +133,12 @@ export default function Home() {
               <div className="flex-1 overflow-hidden">
                 <ChatContainer messages={messages} />
               </div>
-              
-              <div className="p-4 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent relative z-20 shrink-0">
-                <div className="max-w-4xl mx-auto">
+
+              <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent relative z-20 shrink-0">
+                <div className="max-w-3xl mx-auto">
                   <ChatInput onSend={sendMessage} onStop={stop} isLoading={isLoading} />
                   {error && (
-                    <div className="text-center text-red-400 text-xs mt-2 bg-red-400/10 py-2 rounded-lg border border-red-400/20 max-w-4xl mx-auto">
+                    <div className="text-center text-red-400 text-xs mt-2 bg-red-400/10 py-2 rounded-lg border border-red-400/20 max-w-3xl mx-auto">
                       Erro: {error}
                     </div>
                   )}
