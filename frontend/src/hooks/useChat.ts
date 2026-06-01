@@ -43,7 +43,8 @@ export function useChat() {
     abortControllerRef.current = new AbortController();
 
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/chat/stream', {
+      const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+      const response = await fetch(`${apiBase}/api/v1/chat/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
