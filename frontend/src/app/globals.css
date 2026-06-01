@@ -155,3 +155,25 @@ body {
     color: #111827 !important;
   }
 }
+
+/* ─── Mobile improvements ─── */
+@media (max-width: 480px) {
+  .blob-left {
+    width: 280px;
+    height: 280px;
+    left: -60px;
+  }
+  .blob-right {
+    width: 260px;
+    height: 260px;
+    right: -60px;
+  }
+}
+
+/* Touch devices — remove hover flicker */
+@media (hover: none) {
+  .screen-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
