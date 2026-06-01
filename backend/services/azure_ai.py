@@ -33,12 +33,22 @@ Se o usuário precisar entender melhor seus dados, criar dashboards, aprimorar r
 async def get_chat_stream(request: ChatRequest):
     """
     Realiza a chamada assíncrona ao Azure AI Foundry e retorna um gerador SSE.
-    Usa a biblioteca oficial da OpenAI que é compatível com o endpoint /v1 do Azure Foundry.
+    
+    O Azure AI Foundry expõe um endpoint compatível com OpenAI. O deployment
+    já está embutido na URL do endpoint, por isso passamos o nome do deployment
+    como 'model' — o SDK da OpenAI exige o campo, mas o Foundry usa o da URL.
     """
     try:
+        # O Azure AI Foundry usa o endpoint no formato:
+        # https://<resource>.services.ai.azure.com/api/projects/<project>/openai/v1
+        # A autenticação é feita via Bearer token (api_key vira Authorization: Bearer <key>)
         client = AsyncOpenAI(
             base_url=settings.AZURE_AI_FOUNDRY_ENDPOINT,
-            api_key=settings.AZURE_API_KEY
+            api_key=settings.AZURE_API_KEY,
+            default_headers={
+                # O Foundry aceita tanto api-key quanto Authorization Bearer
+                "api-key": settings.AZURE_API_KEY,
+            }
         )
 
         openai_messages = _build_openai_messages(request.messages)
@@ -46,6 +56,8 @@ async def get_chat_stream(request: ChatRequest):
         response = await client.chat.completions.create(
             stream=True,
             messages=openai_messages,
+            # O Foundry usa o deployment embutido na URL; ainda é necessário
+            # passar o campo 'model' pelo SDK — use o mesmo nome do deployment.
             model=settings.AZURE_MODEL_DEPLOYMENT,
             temperature=request.temperature,
             max_tokens=request.max_tokens,
