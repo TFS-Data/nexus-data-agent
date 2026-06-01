@@ -1,13 +1,13 @@
-from typing import List, Union
+from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import AnyHttpUrl, validator
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Antigravity AI Platform"
     API_V1_STR: str = "/api/v1"
     
-    # CORS
-    CORS_ORIGINS: List[AnyHttpUrl] | List[str] = ["http://localhost:3000"]
+    # CORS — usar strings simples evita que o Pydantic normalize/remova trailing slash
+    # e cause mismatch entre a origem enviada pelo browser e a lista permitida.
+    CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     # Azure AI Foundry
     AZURE_AI_FOUNDRY_ENDPOINT: str
