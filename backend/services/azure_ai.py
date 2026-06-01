@@ -42,11 +42,15 @@ async def get_chat_stream(request: ChatRequest):
         # O Azure AI Foundry usa o endpoint no formato:
         # https://<resource>.services.ai.azure.com/api/projects/<project>/openai/v1
         # A autenticação é feita via Bearer token (api_key vira Authorization: Bearer <key>)
+        # O Azure AI Foundry exige o parâmetro api-version em todas as requisições
+        endpoint = settings.AZURE_AI_FOUNDRY_ENDPOINT.rstrip("/")
+        if "api-version" not in endpoint:
+            endpoint = f"{endpoint}?api-version=2024-12-01-preview"
+
         client = AsyncOpenAI(
-            base_url=settings.AZURE_AI_FOUNDRY_ENDPOINT,
+            base_url=endpoint,
             api_key=settings.AZURE_API_KEY,
             default_headers={
-                # O Foundry aceita tanto api-key quanto Authorization Bearer
                 "api-key": settings.AZURE_API_KEY,
             }
         )
