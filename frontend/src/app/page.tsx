@@ -39,33 +39,33 @@ export default function Home() {
           </div>
 
           {/* Right Side / Actions */}
-          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <span className="flex items-center gap-2 text-sm sm:text-base text-emerald-400/90 font-medium bg-emerald-400/10 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-emerald-400/20 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
-              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-              <span className="hidden sm:inline">Online</span>
+          <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0">
+            <span className="flex items-center justify-center gap-2.5 text-sm sm:text-base text-emerald-400/90 font-medium bg-emerald-400/10 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full border border-emerald-400/20 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+              <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400 animate-pulse flex-shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+              <span className="hidden sm:inline leading-none mt-[1px]">Online</span>
             </span>
             {messages.length > 0 && (
               <>
                 <button
                   onClick={() => window.print()}
-                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm hover:shadow-md"
+                  className="hidden sm:flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 bg-zinc-800 text-white text-sm sm:text-base font-medium rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm hover:shadow-md"
                   title="Salvar conversa como PDF"
                 >
-                  <Download size={16} />
-                  Exportar PDF
+                  <Download size={18} />
+                  <span className="leading-none mt-[1px]">Exportar PDF</span>
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="flex sm:hidden items-center p-2 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm"
+                  className="flex sm:hidden items-center justify-center p-3 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm"
                   title="Salvar conversa como PDF"
                 >
-                  <Download size={16} />
+                  <Download size={18} />
                 </button>
                 <button
                   onClick={clearChat}
-                  className="px-3 sm:px-5 py-2 bg-red-500/10 text-red-400 text-sm font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-all shadow-sm"
+                  className="px-5 sm:px-6 py-2.5 sm:py-3 bg-red-500/10 text-red-400 text-sm sm:text-base font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-all shadow-sm flex items-center justify-center"
                 >
-                  Limpar
+                  <span className="leading-none mt-[1px]">Limpar</span>
                 </button>
               </>
             )}
