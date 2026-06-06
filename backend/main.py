@@ -41,7 +41,21 @@ app.include_router(chat.router, prefix=f"{settings.API_V1_STR}/chat", tags=["cha
 
 @app.get("/")
 def read_root():
-    return {"message": f"Bem-vindo à {settings.PROJECT_NAME} API!"}
+    return {"message": f"Bem-vindo à {settings.PROJECT_NAME} API!", "status": "online"}
+
+@app.get("/health")
+def health_check():
+    from services.azure_ai import _build_endpoint
+    endpoint_url = _build_endpoint()
+    # mascara a chave para segurança
+    masked_key = f"{settings.AZURE_API_KEY[:6]}...{settings.AZURE_API_KEY[-4:]}" if len(settings.AZURE_API_KEY) > 10 else "***"
+    return {
+        "status": "ok",
+        "model": settings.AZURE_MODEL_DEPLOYMENT,
+        "endpoint_resolved": endpoint_url,
+        "api_key_preview": masked_key,
+    }
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
