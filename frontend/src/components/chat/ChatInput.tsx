@@ -101,7 +101,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, onStop, isLoading,
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Envie uma mensagem para o Nexus..."
-            className={`w-full bg-transparent text-white placeholder-zinc-400 outline-none resize-none text-[14px] sm:text-[15px] leading-relaxed ${
+            className={`w-full flex-1 bg-transparent text-white placeholder-zinc-400 outline-none resize-none text-[14px] sm:text-[15px] leading-relaxed ${
               large
                 ? 'py-4 sm:py-5 px-2 sm:px-3 min-h-[56px] sm:min-h-[72px] max-h-[240px]'
                 : 'py-3 sm:py-4 px-2 sm:px-3 min-h-[44px] max-h-[200px]'

@@ -71,7 +71,7 @@ async def get_chat_stream(request: ChatRequest):
             method="POST"
         )
 
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=60) as response:
             buffer = ""
             while True:
                 chunk = response.read(512)
@@ -113,7 +113,7 @@ async def get_chat_stream(request: ChatRequest):
         logger.error(f"HTTPError {e.code}: {error_body}")
         yield {"data": json.dumps({"error": f"Error code: {e.code} - {error_body}"})}
     except Exception as e:
-        logger.error(f"Erro ao comunicar com Azure AI Foundry Agent: {str(e)}")
-        yield {"data": json.dumps({"error": str(e)})}
+        logger.error(f"Erro ao comunicar com Azure AI Foundry Agent: {str(e)}", exc_info=True)
+        yield {"data": json.dumps({"error": f"Erro interno da API: {str(e)}"})}
     finally:
         yield {"data": "[DONE]"}
