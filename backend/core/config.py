@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     AZURE_OPENAI_ENDPOINT: str = ""
     AZURE_MODEL_DEPLOYMENT: str
     AZURE_API_KEY: str
+    
+    # Internal Security
+    NEXUS_API_KEY: str = "nexus-secret-key-123"
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
 

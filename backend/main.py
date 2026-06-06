@@ -52,10 +52,10 @@ async def rate_limit_middleware(request: Request, call_next):
         client_ip = request.client.host
         current_time = time.time()
         
-        # Limpa registros antigos
-        for ip in list(request_counts.keys()):
-            if current_time - request_counts[ip]["start_time"] > RATE_LIMIT_WINDOW:
-                del request_counts[ip]
+        # O(1): Limpa apenas o registro do IP solicitante, prevenindo DoS por iteração
+        if client_ip in request_counts:
+            if current_time - request_counts[client_ip]["start_time"] > RATE_LIMIT_WINDOW:
+                del request_counts[client_ip]
                 
         if client_ip not in request_counts:
             request_counts[client_ip] = {"count": 1, "start_time": current_time}
@@ -80,12 +80,10 @@ def read_root():
 def health_check():
     from services.azure_ai import _build_endpoint, _API_VERSIONS
     endpoint_url = _build_endpoint(_API_VERSIONS[0])
-    masked_key = f"{settings.AZURE_API_KEY[:6]}...{settings.AZURE_API_KEY[-4:]}" if len(settings.AZURE_API_KEY) > 10 else "***"
     return {
         "status": "ok",
         "model": settings.AZURE_MODEL_DEPLOYMENT,
         "endpoint_resolved": endpoint_url,
-        "api_key_preview": masked_key,
         "api_versions_to_try": _API_VERSIONS,
     }
 

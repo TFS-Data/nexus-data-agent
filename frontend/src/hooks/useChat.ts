@@ -44,10 +44,13 @@ export function useChat() {
 
     try {
       const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+      const apiKey = process.env.NEXT_PUBLIC_NEXUS_API_KEY || 'nexus-secret-key-123';
+      
       const response = await fetch(`${apiBase}/api/v1/chat/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           messages: [...messages, userMessage].map((m) => ({
