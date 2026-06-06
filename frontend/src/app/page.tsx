@@ -26,44 +26,44 @@ export default function Home() {
       <div className="blob-right opacity-30 pointer-events-none" />
 
       {/* ── Top bar ── */}
-      <header className="w-full flex-shrink-0 border-b border-white/[0.06] bg-[#080808]/60 backdrop-blur-2xl z-20 relative pt-12 pb-4 sm:pt-16 sm:pb-5 px-4 sm:px-8 flex justify-center">
+      <header className="w-full flex-shrink-0 border-b border-white/[0.06] bg-[#080808]/60 backdrop-blur-2xl z-20 relative pt-12 pb-5 sm:pt-16 sm:pb-6 px-4 sm:px-8 flex justify-center">
         <div className="flex items-center justify-between w-full max-w-5xl gap-4">
           {/* Logo / Left Side */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-            <div className="flex items-center gap-2 text-white/50 text-xs sm:text-sm truncate">
-              <span className="font-medium tracking-wide hidden sm:block truncate">Antigravity + Microsoft Foundry</span>
-              <span className="font-medium tracking-wide block sm:hidden truncate">Antigravity</span>
+            <div className="flex items-center gap-2 text-white/50 text-base sm:text-lg truncate">
+              <span className="font-semibold tracking-wide hidden sm:block truncate text-white/80">Antigravity + Microsoft Foundry</span>
+              <span className="font-semibold tracking-wide block sm:hidden truncate text-white/80">Antigravity</span>
             </div>
-            <div className="h-4 w-[1px] bg-white/10 flex-shrink-0" />
-            <span className="text-white/40 text-xs sm:text-sm font-medium flex-shrink-0 truncate">Nexus</span>
+            <div className="h-5 sm:h-6 w-[1px] bg-white/10 flex-shrink-0" />
+            <span className="text-white/60 text-base sm:text-lg font-medium flex-shrink-0 truncate">Nexus</span>
           </div>
 
           {/* Right Side / Actions */}
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <span className="flex items-center gap-1.5 text-xs text-emerald-400/80 font-medium bg-emerald-400/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-emerald-400/20">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+            <span className="flex items-center gap-2 text-sm sm:text-base text-emerald-400/90 font-medium bg-emerald-400/10 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-emerald-400/20 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               <span className="hidden sm:inline">Online</span>
             </span>
             {messages.length > 0 && (
               <>
                 <button
                   onClick={() => window.print()}
-                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 text-white text-xs font-medium rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-zinc-800 text-white text-sm font-medium rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm hover:shadow-md"
                   title="Salvar conversa como PDF"
                 >
-                  <Download size={14} />
+                  <Download size={16} />
                   Exportar PDF
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="flex sm:hidden items-center p-1.5 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                  className="flex sm:hidden items-center p-2 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-all border border-zinc-700 shadow-sm"
                   title="Salvar conversa como PDF"
                 >
-                  <Download size={14} />
+                  <Download size={16} />
                 </button>
                 <button
                   onClick={clearChat}
-                  className="px-2.5 sm:px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-colors"
+                  className="px-3 sm:px-5 py-2 bg-red-500/10 text-red-400 text-sm font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-all shadow-sm"
                 >
                   Limpar
                 </button>
