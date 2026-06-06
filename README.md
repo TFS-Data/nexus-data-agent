@@ -28,7 +28,7 @@ O **Nexus** foi projetado para ser o copiloto de dados da sua organização — 
 
 ### 🌐 Ambiente ao Vivo (Produção)
 Você pode testar a aplicação rodando agora mesmo na nuvem:
-👉 **[Acessar o Nexus Data Agent (Live Demo)](https://nexus-data-agent.vercel.app)**
+👉 **[Acessar o Nexus Data Agent](https://nexus-data-agent.vercel.app)**
 
 *(O backend está hospedado com segurança no Render e o frontend na Vercel).*
 
@@ -300,7 +300,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 <div align="center">
 
-Desenvolvido com ❤️ por **TFS-Data**
+Desenvolvido  por **TFS-Data**
 
 *Nexus — Inteligência que transforma dados em decisões*
 
