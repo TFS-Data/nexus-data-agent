@@ -23,14 +23,20 @@ Lembre-se sempre de que seu nome é Nexus, e você faz parte da plataforma Micro
 Se o usuário precisar entender melhor seus dados, criar dashboards, aprimorar relatórios, estruturar consultas SQL, ou explorar modelos de machine learning, ajude de forma prática e orientada à tomada de decisão.
 """
 
-# Versões da API para tentar em ordem, do mais recente para o mais antigo
+# Versões para tentar em ordem — inclui datas específicas do azure-ai-projects SDK
 _API_VERSIONS = [
+    "2025-05-15-preview",   # azure-ai-projects SDK v1.0.0b9+
+    "2025-04-01-preview",
+    "2025-03-01-preview",
+    "2025-02-01-preview",
     "2025-01-01-preview",
     "2024-12-01-preview",
     "2024-11-01-preview",
     "2024-10-01-preview",
     "2024-09-01-preview",
-    "2025-04-01-preview",
+    "2024-08-01-preview",
+    "2024-07-01-preview",
+    "2024-05-01-preview",
 ]
 
 
