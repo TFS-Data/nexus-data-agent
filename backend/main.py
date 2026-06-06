@@ -36,6 +36,39 @@ async def add_security_headers(request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
+from fastapi import Request, HTTPException, status
+from fastapi.responses import JSONResponse
+import time
+
+# Rate Limiting Simples na Memória
+request_counts = {}
+RATE_LIMIT = 15 # requisições
+RATE_LIMIT_WINDOW = 60 # segundos
+
+@app.middleware("http")
+async def rate_limit_middleware(request: Request, call_next):
+    # Aplica rate limit apenas no chat
+    if request.url.path.startswith("/api/v1/chat"):
+        client_ip = request.client.host
+        current_time = time.time()
+        
+        # Limpa registros antigos
+        for ip in list(request_counts.keys()):
+            if current_time - request_counts[ip]["start_time"] > RATE_LIMIT_WINDOW:
+                del request_counts[ip]
+                
+        if client_ip not in request_counts:
+            request_counts[client_ip] = {"count": 1, "start_time": current_time}
+        else:
+            if request_counts[client_ip]["count"] >= RATE_LIMIT:
+                return JSONResponse(
+                    status_code=429,
+                    content={"detail": "Muitas requisições. Por favor, aguarde um momento antes de enviar mais mensagens."}
+                )
+            request_counts[client_ip]["count"] += 1
+
+    response = await call_next(request)
+    return response
 
 app.include_router(chat.router, prefix=f"{settings.API_V1_STR}/chat", tags=["chat"])
 
