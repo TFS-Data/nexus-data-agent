@@ -26,9 +26,10 @@ export default function Home() {
       <div className="blob-right opacity-30 pointer-events-none" />
 
       {/* ── Top bar ── */}
-      <header className="pt-6 pb-3 sm:pt-8 sm:pb-4 border-b border-white/[0.06] flex items-center justify-center px-6 sm:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative w-full">
-        <div className="flex items-center justify-between w-full max-w-7xl">
-          <div className="flex items-center gap-1.5 sm:gap-4 min-w-0 mr-2 flex-1">
+      <header className="w-full flex-shrink-0 border-b border-white/[0.06] bg-[#080808]/60 backdrop-blur-2xl z-20 relative pt-12 pb-4 sm:pt-16 sm:pb-5 px-4 sm:px-8 flex justify-center">
+        <div className="flex items-center justify-between w-full max-w-5xl gap-4">
+          {/* Logo / Left Side */}
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <div className="flex items-center gap-2 text-white/50 text-xs sm:text-sm truncate">
               <span className="font-medium tracking-wide hidden sm:block truncate">Antigravity + Microsoft Foundry</span>
               <span className="font-medium tracking-wide block sm:hidden truncate">Antigravity</span>
@@ -37,37 +38,38 @@ export default function Home() {
             <span className="text-white/40 text-xs sm:text-sm font-medium flex-shrink-0 truncate">Nexus</span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 mt-1 sm:mt-2">
+          {/* Right Side / Actions */}
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <span className="flex items-center gap-1.5 text-xs text-emerald-400/80 font-medium bg-emerald-400/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-emerald-400/20">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
               <span className="hidden sm:inline">Online</span>
             </span>
-          {messages.length > 0 && (
-            <>
-              <button
-                onClick={() => window.print()}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 text-white text-xs font-medium rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
-                title="Salvar conversa como PDF"
-              >
-                <Download size={14} />
-                Exportar PDF
-              </button>
-              <button
-                onClick={() => window.print()}
-                className="flex sm:hidden items-center p-1.5 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
-                title="Salvar conversa como PDF"
-              >
-                <Download size={14} />
-              </button>
-              <button
-                onClick={clearChat}
-                className="px-2.5 sm:px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-colors"
-              >
-                Limpar
-              </button>
-            </>
-          )}
-        </div>
+            {messages.length > 0 && (
+              <>
+                <button
+                  onClick={() => window.print()}
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-zinc-800 text-white text-xs font-medium rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                  title="Salvar conversa como PDF"
+                >
+                  <Download size={14} />
+                  Exportar PDF
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="flex sm:hidden items-center p-1.5 bg-zinc-800 text-white rounded-full hover:bg-zinc-700 transition-colors border border-zinc-700"
+                  title="Salvar conversa como PDF"
+                >
+                  <Download size={14} />
+                </button>
+                <button
+                  onClick={clearChat}
+                  className="px-2.5 sm:px-4 py-1.5 bg-red-500/10 text-red-400 text-xs font-medium rounded-full hover:bg-red-500/20 border border-red-500/20 transition-colors"
+                >
+                  Limpar
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </header>
 
