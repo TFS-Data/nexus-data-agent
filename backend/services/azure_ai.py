@@ -58,27 +58,14 @@ def _build_endpoint(api_version: str = "2025-01-01-preview") -> str:
 async def get_chat_stream(request: ChatRequest):
     """
     Chama o endpoint /responses do Azure AI Foundry Agent com streaming SSE.
-    Formato correto: payload com 'input' (array de mensagens) e 'max_output_tokens'.
-    SSE events: response.output_text.delta / response.completed.
+    Tenta múltiplas api-versions, expõe o erro real se não for sobre api-version.
     """
+    last_error = "Nenhuma versão testada"
+
     for api_version in _API_VERSIONS:
-        result = await _try_stream(request, api_version)
-        if result is not None:
-            async for event in result:
-                yield event
-            return
+        endpoint = _build_endpoint(api_version)
+        logger.info(f"Tentando api-version={api_version}")
 
-    yield {"data": json.dumps({"error": "Nenhuma versão de API compatível encontrada. Verifique as configurações no Render."})}
-    yield {"data": "[DONE]"}
-
-
-async def _try_stream(request: ChatRequest, api_version: str):
-    """
-    Tenta fazer streaming com uma api-version específica.
-    Retorna um gerador assíncrono se bem-sucedido, None se a versão não for suportada.
-    """
-    try:
-        # Monta array de mensagens no formato do /responses
         input_messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for m in request.messages:
             if m.role in ("user", "assistant"):
@@ -92,7 +79,6 @@ async def _try_stream(request: ChatRequest, api_version: str):
             "max_output_tokens": request.max_tokens,
         }
 
-        endpoint = _build_endpoint(api_version)
         body = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
             endpoint,
@@ -105,27 +91,45 @@ async def _try_stream(request: ChatRequest, api_version: str):
             method="POST",
         )
 
-        # Testa abrindo a conexão — se der HTTPError 400 por api-version, retorna None
         try:
             response_obj = urllib.request.urlopen(req, timeout=120)
+            # Sucesso — stream!
+            async for event in _stream_generator(response_obj):
+                yield event
+            return
+
         except urllib.error.HTTPError as he:
             body_err = he.read().decode("utf-8", errors="replace")
-            if "api-version" in body_err.lower() or he.code in (400, 404):
-                logger.warning(f"api-version {api_version} não suportada: {body_err}")
-                return None  # sinaliza para tentar próxima versão
-            # Outro erro HTTP — propaga como evento de erro
-            return _error_generator(f"Erro {he.code}: {body_err}")
+            logger.warning(f"HTTPError {he.code} (api-version={api_version}): {body_err}")
 
-        # Retorna gerador de streaming
-        return _stream_generator(response_obj)
+            try:
+                err_msg = json.loads(body_err).get("error", {}).get("message", body_err)
+            except Exception:
+                err_msg = body_err
 
-    except Exception as e:
-        logger.error(f"Erro inesperado: {e}", exc_info=True)
-        return _error_generator(str(e))
+            is_version_error = any(p in err_msg.lower() for p in [
+                "api version not supported",
+                "api-version",
+                "unsupported version",
+                "missing required query parameter",
+            ])
 
+            if is_version_error:
+                last_error = f"api-version {api_version}: {err_msg}"
+                continue  # tenta próxima
 
-async def _error_generator(msg: str):
-    yield {"data": json.dumps({"error": msg})}
+            # Erro real (auth, payload, etc.) — para e reporta
+            yield {"data": json.dumps({"error": f"Erro Azure {he.code}: {err_msg}"})}
+            yield {"data": "[DONE]"}
+            return
+
+        except Exception as e:
+            logger.error(f"Erro inesperado: {e}", exc_info=True)
+            yield {"data": json.dumps({"error": f"Erro interno: {str(e)}"})}
+            yield {"data": "[DONE]"}
+            return
+
+    yield {"data": json.dumps({"error": f"Nenhuma api-version suportada. Último: {last_error}"})}
     yield {"data": "[DONE]"}
 
 
