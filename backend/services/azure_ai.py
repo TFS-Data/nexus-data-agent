@@ -72,17 +72,17 @@ async def get_chat_stream(request: ChatRequest):
         endpoint = _build_endpoint(api_version)
         logger.info(f"Tentando api-version={api_version}")
 
-        input_messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        # Constrói input: apenas mensagens user/assistant
+        # NOTA: NÃO incluir system prompt nem model/temperature — o Agent do Foundry
+        # já tem tudo isso pré-configurado no portal Azure AI Foundry.
+        input_messages = []
         for m in request.messages:
             if m.role in ("user", "assistant"):
                 input_messages.append({"role": m.role, "content": m.content})
 
         payload = {
-            "model": settings.AZURE_MODEL_DEPLOYMENT,
             "input": input_messages,
             "stream": True,
-            "temperature": request.temperature,
-            "max_output_tokens": request.max_tokens,
         }
 
         body = json.dumps(payload).encode("utf-8")
