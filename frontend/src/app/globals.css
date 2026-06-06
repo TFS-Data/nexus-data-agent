@@ -9,7 +9,7 @@ body {
   color: #ffffff;
   overflow: hidden;
   height: 100dvh;
-  width: 100dvw;
+  width: 100%;
 }
 
 /* ─── Dot grid ─── */

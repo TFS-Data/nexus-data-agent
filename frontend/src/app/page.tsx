@@ -20,7 +20,7 @@ export default function Home() {
   const { messages, isLoading, error, sendMessage, stop, clearChat } = useChat();
 
   return (
-    <div className="relative flex flex-col h-[100dvh] w-[100dvw] overflow-hidden dot-grid">
+    <div className="relative flex flex-col h-[100dvh] w-full overflow-hidden dot-grid">
       {/* ── Gradient blobs ── */}
       <div className="blob-left opacity-30 pointer-events-none" />
       <div className="blob-right opacity-30 pointer-events-none" />
