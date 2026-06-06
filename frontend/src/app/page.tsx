@@ -26,7 +26,7 @@ export default function Home() {
       <div className="blob-right opacity-30 pointer-events-none" />
 
       {/* ── Top bar ── */}
-      <header className="h-14 sm:h-16 border-b border-white/[0.06] flex items-center justify-between px-3 sm:px-8 lg:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative">
+      <header className="h-16 sm:h-20 pt-2 sm:pt-4 pb-2 border-b border-white/[0.06] flex items-center justify-between px-4 sm:px-8 lg:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative">
         <div className="flex items-center gap-1.5 sm:gap-4 min-w-0 mr-2 flex-1">
           <div className="flex items-center gap-2 text-white/50 text-xs sm:text-sm truncate">
             <span className="font-medium tracking-wide hidden sm:block truncate">Antigravity + Microsoft Foundry</span>
@@ -36,7 +36,7 @@ export default function Home() {
           <span className="text-white/40 text-xs sm:text-sm font-medium flex-shrink-0 truncate">Nexus</span>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0 mr-2 sm:mr-6 mt-1 sm:mt-2">
           <span className="flex items-center gap-1.5 text-xs text-emerald-400/80 font-medium bg-emerald-400/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border border-emerald-400/20">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
             <span className="hidden sm:inline">Online</span>
