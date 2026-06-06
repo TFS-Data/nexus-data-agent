@@ -27,7 +27,7 @@ export default function Home() {
 
       {/* ── Top bar ── */}
       <header className="w-full flex-shrink-0 border-b border-white/[0.06] bg-[#080808]/60 backdrop-blur-2xl z-20 relative pt-12 pb-5 sm:pt-16 sm:pb-6 px-4 sm:px-8 flex justify-center">
-        <div className="flex items-center justify-between w-full max-w-5xl gap-4">
+        <div className="flex items-center justify-between w-full max-w-5xl gap-4 py-2 sm:py-3">
           {/* Logo / Left Side */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <div className="flex items-center gap-2 text-white/50 text-base sm:text-lg truncate">
