@@ -20,7 +20,7 @@ export default function Home() {
   const { messages, isLoading, error, sendMessage, stop, clearChat } = useChat();
 
   return (
-    <div className="relative flex flex-col h-[100dvh] w-full overflow-hidden dot-grid">
+    <div className="fixed inset-0 flex flex-col w-full overflow-hidden dot-grid bg-[#080808]">
       {/* ── Gradient blobs ── */}
       <div className="blob-left opacity-30 pointer-events-none" />
       <div className="blob-right opacity-30 pointer-events-none" />
@@ -85,7 +85,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[clamp(2rem,7vw,4.5rem)] font-semibold leading-[1.08] tracking-tight text-white max-w-4xl mb-4 sm:mb-5 text-center"
+                className="text-[clamp(1.75rem,6.5vw,4.5rem)] break-words w-full font-semibold leading-[1.08] tracking-tight text-white max-w-4xl mb-4 sm:mb-5 text-center"
               >
                 Converse com agentes de<br className="hidden sm:block" />{" "}
                 IA especializados em dados
