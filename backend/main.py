@@ -13,6 +13,8 @@ if settings.CORS_ORIGINS:
         origins = ["*"]
     else:
         origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
+        if "https://nexus-data-agent.vercel.app" not in origins:
+            origins.append("https://nexus-data-agent.vercel.app")
 
 allow_all = origins == ["*"]
 
