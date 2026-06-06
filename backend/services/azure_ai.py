@@ -26,9 +26,9 @@ Se o usuário precisar entender melhor seus dados, criar dashboards, aprimorar r
 
 def _build_endpoint() -> str:
     """
-    Monta a URL final do endpoint /chat/completions com api-version.
-    O AZURE_AI_FOUNDRY_ENDPOINT já deve conter o path base (ex: .../openai/v1).
-    O código NUNCA duplica /chat/completions.
+    Monta a URL final do endpoint /chat/completions.
+    - Se o endpoint base já tiver /vN/ no path (ex: /openai/v1), NÃO adiciona api-version.
+    - Para endpoints clássicos Azure OpenAI (.openai.azure.com), adiciona api-version.
     """
     base = settings.AZURE_AI_FOUNDRY_ENDPOINT.rstrip("/")
 
@@ -38,11 +38,16 @@ def _build_endpoint() -> str:
 
     url = f"{base}/chat/completions"
 
-    # Adiciona api-version se não estiver já na URL
-    if "api-version" not in url:
-        url = f"{url}?api-version=2024-02-15-preview"
+    # Só adiciona api-version se ainda não estiver na URL
+    # E apenas para endpoints clássicos (.openai.azure.com) —
+    # o endpoint do AI Foundry Projects (/openai/v1) não usa api-version como query param
+    has_version_in_path = "/openai/v" in url or "/v1/" in url or url.endswith("/v1")
+    if "api-version" not in url and not has_version_in_path:
+        url = f"{url}?api-version=2024-10-21"
 
+    logger.info(f"Endpoint final: {url}")
     return url
+
 
 
 async def get_chat_stream(request: ChatRequest):
