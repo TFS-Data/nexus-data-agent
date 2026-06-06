@@ -12,7 +12,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ messages }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [messages]);
 
   if (messages.length === 0) {
