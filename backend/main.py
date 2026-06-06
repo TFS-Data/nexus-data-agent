@@ -45,16 +45,17 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    from services.azure_ai import _build_endpoint
-    endpoint_url = _build_endpoint()
-    # mascara a chave para segurança
+    from services.azure_ai import _build_endpoint, _API_VERSIONS
+    endpoint_url = _build_endpoint(_API_VERSIONS[0])
     masked_key = f"{settings.AZURE_API_KEY[:6]}...{settings.AZURE_API_KEY[-4:]}" if len(settings.AZURE_API_KEY) > 10 else "***"
     return {
         "status": "ok",
         "model": settings.AZURE_MODEL_DEPLOYMENT,
         "endpoint_resolved": endpoint_url,
         "api_key_preview": masked_key,
+        "api_versions_to_try": _API_VERSIONS,
     }
+
 
 
 if __name__ == "__main__":

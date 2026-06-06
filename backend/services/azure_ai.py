@@ -23,56 +23,76 @@ Lembre-se sempre de que seu nome é Nexus, e você faz parte da plataforma Micro
 Se o usuário precisar entender melhor seus dados, criar dashboards, aprimorar relatórios, estruturar consultas SQL, ou explorar modelos de machine learning, ajude de forma prática e orientada à tomada de decisão.
 """
 
+# Versões da API para tentar em ordem, do mais recente para o mais antigo
+_API_VERSIONS = [
+    "2025-01-01-preview",
+    "2024-12-01-preview",
+    "2024-11-01-preview",
+    "2024-10-01-preview",
+    "2024-09-01-preview",
+    "2025-04-01-preview",
+]
 
-def _build_endpoint() -> str:
+
+def _build_endpoint(api_version: str = "2025-01-01-preview") -> str:
     """
-    Monta a URL final do endpoint /chat/completions.
-    - Se o endpoint base já tiver /vN/ no path (ex: /openai/v1), NÃO adiciona api-version.
-    - Para endpoints clássicos Azure OpenAI (.openai.azure.com), adiciona api-version.
+    Retorna o endpoint final do Azure AI Foundry Agent (/responses).
+    NÃO adiciona /chat/completions — o endpoint do Foundry Agent já termina em /responses.
     """
     base = settings.AZURE_AI_FOUNDRY_ENDPOINT.rstrip("/")
 
-    # Remove /chat/completions no final se já existir para evitar duplicação
+    # Garante que não há /chat/completions acidental no final
     if base.endswith("/chat/completions"):
         base = base[: -len("/chat/completions")]
 
-    url = f"{base}/chat/completions"
+    # Adiciona api-version apenas se ainda não estiver na URL
+    if "api-version" not in base:
+        url = f"{base}?api-version={api_version}"
+    else:
+        url = base
 
-    # Só adiciona api-version se ainda não estiver na URL
-    # E apenas para endpoints clássicos (.openai.azure.com) —
-    # o endpoint do AI Foundry Projects (/openai/v1) não usa api-version como query param
-    has_version_in_path = "/openai/v" in url or "/v1/" in url or url.endswith("/v1")
-    if "api-version" not in url and not has_version_in_path:
-        url = f"{url}?api-version=2024-10-21"
-
-    logger.info(f"Endpoint final: {url}")
+    logger.info(f"Endpoint Azure AI Agent: {url}")
     return url
-
 
 
 async def get_chat_stream(request: ChatRequest):
     """
-    Chama o endpoint /chat/completions do Azure AI Foundry com streaming SSE.
-    Usa o formato padrão da API OpenAI (messages + max_tokens).
+    Chama o endpoint /responses do Azure AI Foundry Agent com streaming SSE.
+    Formato correto: payload com 'input' (array de mensagens) e 'max_output_tokens'.
+    SSE events: response.output_text.delta / response.completed.
+    """
+    for api_version in _API_VERSIONS:
+        result = await _try_stream(request, api_version)
+        if result is not None:
+            async for event in result:
+                yield event
+            return
+
+    yield {"data": json.dumps({"error": "Nenhuma versão de API compatível encontrada. Verifique as configurações no Render."})}
+    yield {"data": "[DONE]"}
+
+
+async def _try_stream(request: ChatRequest, api_version: str):
+    """
+    Tenta fazer streaming com uma api-version específica.
+    Retorna um gerador assíncrono se bem-sucedido, None se a versão não for suportada.
     """
     try:
-        # Monta lista de mensagens no formato OpenAI
-        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        # Monta array de mensagens no formato do /responses
+        input_messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for m in request.messages:
             if m.role in ("user", "assistant"):
-                messages.append({"role": m.role, "content": m.content})
+                input_messages.append({"role": m.role, "content": m.content})
 
         payload = {
             "model": settings.AZURE_MODEL_DEPLOYMENT,
-            "messages": messages,
+            "input": input_messages,
             "stream": True,
             "temperature": request.temperature,
-            "max_tokens": request.max_tokens,
+            "max_output_tokens": request.max_tokens,
         }
 
-        endpoint = _build_endpoint()
-        logger.info(f"Chamando endpoint: {endpoint}")
-
+        endpoint = _build_endpoint(api_version)
         body = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
             endpoint,
@@ -80,56 +100,91 @@ async def get_chat_stream(request: ChatRequest):
             headers={
                 "Content-Type": "application/json",
                 "api-key": settings.AZURE_API_KEY,
+                "Authorization": f"Bearer {settings.AZURE_API_KEY}",
             },
             method="POST",
         )
 
-        with urllib.request.urlopen(req, timeout=120) as response:
-            buffer = ""
-            while True:
-                chunk = response.read(512)
-                if not chunk:
-                    break
-                buffer += chunk.decode("utf-8", errors="replace")
-                lines = buffer.split("\n")
-                buffer = lines[-1]  # guarda linha incompleta
+        # Testa abrindo a conexão — se der HTTPError 400 por api-version, retorna None
+        try:
+            response_obj = urllib.request.urlopen(req, timeout=120)
+        except urllib.error.HTTPError as he:
+            body_err = he.read().decode("utf-8", errors="replace")
+            if "api-version" in body_err.lower() or he.code in (400, 404):
+                logger.warning(f"api-version {api_version} não suportada: {body_err}")
+                return None  # sinaliza para tentar próxima versão
+            # Outro erro HTTP — propaga como evento de erro
+            return _error_generator(f"Erro {he.code}: {body_err}")
 
-                for line in lines[:-1]:
-                    line = line.strip()
-                    if not line or line.startswith(":"):
-                        continue
-                    if line.startswith("data: "):
-                        data_str = line[6:].strip()
-                        if data_str == "[DONE]":
-                            yield {"data": "[DONE]"}
-                            return
-                        try:
-                            data = json.loads(data_str)
-                            # Formato OpenAI chat/completions stream
+        # Retorna gerador de streaming
+        return _stream_generator(response_obj)
+
+    except Exception as e:
+        logger.error(f"Erro inesperado: {e}", exc_info=True)
+        return _error_generator(str(e))
+
+
+async def _error_generator(msg: str):
+    yield {"data": json.dumps({"error": msg})}
+    yield {"data": "[DONE]"}
+
+
+async def _stream_generator(response_obj):
+    """Processa o stream SSE do /responses endpoint do Azure AI Foundry."""
+    try:
+        buffer = ""
+        while True:
+            chunk = response_obj.read(512)
+            if not chunk:
+                break
+            buffer += chunk.decode("utf-8", errors="replace")
+            lines = buffer.split("\n")
+            buffer = lines[-1]
+
+            for line in lines[:-1]:
+                line = line.strip()
+                if not line or line.startswith(":"):
+                    continue
+                if line.startswith("data: "):
+                    data_str = line[6:].strip()
+                    if data_str == "[DONE]":
+                        yield {"data": "[DONE]"}
+                        return
+                    try:
+                        data = json.loads(data_str)
+                        event_type = data.get("type", "")
+
+                        # Formato /responses do Azure AI Foundry Agent
+                        if event_type == "response.output_text.delta":
+                            delta = data.get("delta", "")
+                            if delta:
+                                yield {"data": json.dumps({"content": delta})}
+
+                        # Formato OpenAI chat/completions (fallback)
+                        elif "choices" in data:
                             choices = data.get("choices", [])
                             if choices:
-                                delta = choices[0].get("delta", {})
-                                content = delta.get("content", "")
+                                content = choices[0].get("delta", {}).get("content", "")
                                 if content:
                                     yield {"data": json.dumps({"content": content})}
-                                finish_reason = choices[0].get("finish_reason")
-                                if finish_reason:
+                                if choices[0].get("finish_reason"):
                                     yield {"data": "[DONE]"}
                                     return
-                        except json.JSONDecodeError:
-                            pass
 
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode("utf-8", errors="replace")
-        logger.error(f"HTTPError {e.code}: {error_body}")
-        try:
-            err_json = json.loads(error_body)
-            msg = err_json.get("error", {}).get("message", error_body)
-        except Exception:
-            msg = error_body
-        yield {"data": json.dumps({"error": f"Erro {e.code}: {msg}"})}
+                        elif event_type == "response.completed":
+                            yield {"data": "[DONE]"}
+                            return
+                        elif event_type == "error":
+                            yield {"data": json.dumps({"error": data.get("message", "Erro do agente")})}
+                            return
+                    except json.JSONDecodeError:
+                        pass
     except Exception as e:
-        logger.error(f"Erro ao comunicar com Azure AI Foundry: {str(e)}", exc_info=True)
-        yield {"data": json.dumps({"error": f"Erro interno: {str(e)}"})}
+        logger.error(f"Erro no stream: {e}", exc_info=True)
+        yield {"data": json.dumps({"error": f"Erro no stream: {str(e)}"})}
     finally:
+        try:
+            response_obj.close()
+        except Exception:
+            pass
         yield {"data": "[DONE]"}
