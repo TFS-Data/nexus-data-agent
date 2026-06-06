@@ -79,7 +79,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 overflow-y-auto py-8"
+              className="flex-1 flex flex-col w-full items-center justify-center px-4 sm:px-6 overflow-y-auto py-8"
             >
               <motion.h1
                 initial={{ opacity: 0, y: 24 }}
