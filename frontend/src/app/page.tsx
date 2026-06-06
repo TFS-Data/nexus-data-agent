@@ -70,7 +70,7 @@ export default function Home() {
       </header>
 
       {/* ── Main content area ── */}
-      <div className="flex-1 overflow-hidden relative z-10 flex flex-col">
+      <div className="flex-1 overflow-hidden relative z-10 flex flex-col min-w-0 w-full">
         <AnimatePresence mode="wait">
           {messages.length === 0 ? (
             <motion.div
@@ -128,9 +128,9 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
-              className="flex-1 flex flex-col overflow-hidden w-full h-full"
+              className="flex-1 flex flex-col overflow-hidden min-w-0 w-full h-full"
             >
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-hidden min-w-0 w-full">
                 <ChatContainer messages={messages} />
               </div>
 

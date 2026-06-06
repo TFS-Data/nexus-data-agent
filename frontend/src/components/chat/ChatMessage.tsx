@@ -23,7 +23,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, attachm
         {isUser ? <User size={18} /> : <Bot size={18} />}
       </div>
       
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-w-0">
         <div className="font-semibold mb-1 text-sm text-zinc-400">
           {isUser ? 'Você' : 'Agente IA'}
         </div>
@@ -38,7 +38,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ role, content, attachm
           </div>
         )}
 
-        <div className="prose prose-invert prose-p:leading-relaxed max-w-none prose-pre:bg-black/50 prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl">
+        <div className="prose prose-invert prose-p:leading-relaxed max-w-none break-words prose-pre:max-w-full prose-pre:overflow-x-auto prose-pre:bg-black/50 prose-pre:border prose-pre:border-zinc-800 prose-pre:rounded-xl">
           {content ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {content}
