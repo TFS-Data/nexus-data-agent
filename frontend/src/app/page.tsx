@@ -26,7 +26,7 @@ export default function Home() {
       <div className="blob-right opacity-30 pointer-events-none" />
 
       {/* ── Top bar ── */}
-      <header className="h-16 sm:h-20 pt-2 sm:pt-4 pb-2 border-b border-white/[0.06] flex items-center justify-center px-6 sm:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative w-full">
+      <header className="pt-6 pb-3 sm:pt-8 sm:pb-4 border-b border-white/[0.06] flex items-center justify-center px-6 sm:px-12 flex-shrink-0 bg-[#080808]/60 backdrop-blur-2xl z-20 relative w-full">
         <div className="flex items-center justify-between w-full max-w-7xl">
           <div className="flex items-center gap-1.5 sm:gap-4 min-w-0 mr-2 flex-1">
             <div className="flex items-center gap-2 text-white/50 text-xs sm:text-sm truncate">
