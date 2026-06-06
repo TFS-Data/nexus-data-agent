@@ -56,8 +56,8 @@ async def get_chat_stream(request: ChatRequest):
             payload["input"] = f"[Histórico da conversa]\n{history_text}\n\n[Nova mensagem]\n{last_user_input}"
 
         endpoint = settings.AZURE_AI_FOUNDRY_ENDPOINT.rstrip("/")
-        if "api-version" not in endpoint:
-            endpoint = f"{endpoint}?api-version=2024-02-15-preview"
+        if not endpoint.endswith("/chat/completions"):
+            endpoint = f"{endpoint}/chat/completions"
 
         body = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
