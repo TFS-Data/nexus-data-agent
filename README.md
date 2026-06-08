@@ -276,19 +276,6 @@ docker compose up --build
 
 ---
 
-## 🤝 Contribuição
-
-Contribuições são bem-vindas! Siga os passos:
-
-1. Faça um Fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`)
-3. Commit suas mudanças (`git commit -m 'feat: adiciona minha feature'`)
-4. Push para a branch (`git push origin feature/minha-feature`)
-5. Abra um Pull Request
-
-
----
-
 <div align="center">
 
 Desenvolvido  por **TFS-Data**
