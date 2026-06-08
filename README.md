@@ -274,12 +274,8 @@ docker compose up --build
 - [ ] Integração com Power BI Embedded
 - [ ] Geração automática de dashboards a partir de dados
 
----
 
-<div align="center">
 
 Desenvolvido  por **TFS-Data**
 
 *Nexus — Inteligência que transforma dados em decisões*
-
-</div>
